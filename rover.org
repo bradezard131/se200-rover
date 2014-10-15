@@ -1,0 +1,14 @@
+
+* SE200 Assignment
+** Design and implement a system for controlling a Mars Rover.
+** The rover can drive, turn, and has a communications antenna,
+** soil analysis tools, and a camera. The rover should be semi-
+** autonomous - that is, it should take a list of tasks and 
+** complete them in order - to improve efficeincy.
+
+* Communications
+** TODO implement receive(String)
+
+* Task Manager
+
+* Controller
