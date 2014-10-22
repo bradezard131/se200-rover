@@ -4,45 +4,51 @@
  * Info: Controller for the motor of a mars rover.
  */
 
-import java.util.Observer;
+import java.util.*;
 
 public class DriveController extends Driver {
     //-- Class Driver --//
     public static void main(String[] args) {
-	Driver d = new DriveController();
+	Driver d = new DriveController(new Antenna(new Messagebox<FuncList>()));
 
 	((DriveController)d).moveFinished();
 	((DriveController)d).mechanicalError();
 
 	d.drive(10);
 	d.turn(180);
-	try { Thread.sleep(5000); } catch(Exception e) {}
-
-	String buf = ((DriveController)d).msgs.remove();
-	while(buf != null) {
-	    System.out.println(buf);
-	    buf = ((DriveController)d).msgs.remove();
-	}
     }
 
     //--Instance Fields--//
-    private Messagebox<String> msgs;
+    private Comm comm;
+    private boolean moving;
     
+
     //-- Constructor --//
-    public DriveController() {
-	this.msgs = new Messagebox<String>();
+    public DriveController(Comm comm) {
+	this.comm = comm;
+	moving = false;
     }
 
     //-- Instance Methods --//
+    public void drive(double distance) {
+	this.moving = true;
+	super.drive(distance);
+    }
+
+    public void turn(double angle) {
+	this.moving = true;
+	super.turn(angle);
+    }
+    
     public void moveFinished() {
-	msgs.add("Move successful");
+	comm.send("Move successful");
+	this.moving = false;
     }	
 
     public void mechanicalError() {
-	msgs.add("Move failed");
+	comm.send("Move failed");
+	this.moving = false;
     }
 
-    public void addObserver(Observer o) {
-	msgs.addObserver(o);
-    }
+    public boolean isMoving() { return this.moving; }
 }

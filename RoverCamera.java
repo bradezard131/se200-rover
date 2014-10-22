@@ -7,27 +7,23 @@
 public class RoverCamera extends Camera {
     //-- Class Driver --//
     public static void main(String[] args) {
-	Camera c = new RoverCamera();
+	Camera c = new RoverCamera(new Antenna(new Messagebox<FuncList>()));
 
 	c.photoReady("TEST SUCCESS".toCharArray());
 
 	c.takePhoto();
-	try { Thread.sleep(1100); } catch (Exception e) {}
-       
-	System.out.println(((RoverCamera)c).msgs.remove());
-	System.out.println(((RoverCamera)c).msgs.remove());
     }
 
     //-- Instance Fields --//
-    private Messagebox<String> msgs;
+    private Comm comm;
 
     //-- Constructor --//
-    public RoverCamera() {
-	msgs = new Messagebox<String>();
+    public RoverCamera(Comm comm) {
+	this.comm = comm;
     }
 
     //-- Instance Methods --//
     public void photoReady(char[] photoData) {
-	msgs.add(new String(photoData));
+	comm.send(new String(photoData));
     }
 }

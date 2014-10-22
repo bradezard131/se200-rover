@@ -7,6 +7,21 @@
 import java.util.*;
 
 public class FuncList implements java.io.Serializable {
+    //-- Class Driver --//
+    public static void main(String[] args) {
+	FuncList fl = new FuncList(1);
+
+	fl.add(new DriveFunc(1));
+	fl.add(new PhotoFunc());
+
+	System.out.println(fl.toString());
+
+	fl.next();
+	fl.next();
+
+	System.out.println("TEST COMPLETE");
+    }
+
     // Serialization Version
     private static final long serialVersionUID = 1L;
 

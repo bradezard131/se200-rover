@@ -7,25 +7,21 @@
 public class RoverSoilAnalyser extends SoilAnalyser {
     //-- Class Driver --//
     public static void main(String[] args) {
-	SoilAnalyser sa = new RoverSoilAnalyser();
+	SoilAnalyser sa = new RoverSoilAnalyser(new Antenna(new Messagebox<FuncList>()));
 
 	sa.analyse();
-	
-	try { Thread.sleep(5100); } catch (Exception e) {}
-
-	System.out.println(((RoverSoilAnalyser)sa).msgs.remove());
     }
 
     //-- Instance Fields --//
-    private Messagebox<String> msgs;
+    private Comm comm;
 
     //-- Constructor --//
-    public RoverSoilAnalyser() {
-	msgs = new Messagebox<String>();
+    public RoverSoilAnalyser(Comm comm) {
+	this.comm = comm;
     }
 
     //-- Instance Methods --//
     public void analysisReady(String analysis) {
-	msgs.add(analysis);
+	comm.send(analysis);
     }
 }

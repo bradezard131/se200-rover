@@ -6,7 +6,32 @@
 
 import java.util.*;
 
-public class TaskManager {
+public class TaskManager implements Observer {
+    //-- Class Driver --//
+    public static void main(String[] args) {
+	//Start taskmanager
+	Comm comm = new Antenna(new Messagebox<FuncList>());
+	Driver dc = new DriveController(comm);
+	SoilAnalyser sa = new RoverSoilAnalyser(comm);
+	Camera cam = new RoverCamera(comm);
+	Tools tools = new Tools(sa, dc, cam, comm);
+	Dispatcher dis = new Dispatcher(tools);
+	TaskManager tm = new TaskManager(dis);
+	tools.setTaskManager(tm);
+
+	FuncList fl = new FuncList(0);
+	fl.add(new DriveFunc(10));
+	fl.add(new PhotoFunc());
+	tm.add(fl);
+	fl = new FuncList(1);
+	fl.add(new TurnFunc(20));
+	fl.add(new AnalyseFunc());
+	tm.add(fl);
+
+	tm.runNext();
+	tm.runNext();
+    }	
+
     //-- Instance Fields --//
     private Map<Integer, FuncList> lists;
     private int next;
@@ -29,16 +54,26 @@ public class TaskManager {
     }
 
     //-- Instance Methods --//
+    public void update(Observable obs, Object obj) {
+	this.add(((Messagebox<FuncList>)obs).remove());
+	this.runNext();
+    }
+
     public void run(int id) {
 	FuncList fl = lists.get(id);
 	Function f;
-	
+
 	while((f = fl.next()) != null)	    
 	    d.dispatch(f);
     }
 
     public void runNext() {
-	this.run(next++);
+	try {
+	    while(true)
+		this.run(next++);
+	} catch (NullPointerException npe) {
+	    next--;
+	}
     }
 
     public void add(FuncList fl) {
