@@ -17,12 +17,16 @@ public class Messagebox<E> extends Observable {
 
     //-- Instance Methods --//
     public void add(E itm) {
-	box.enqueue(itm);
+	box.add(itm);
 	this.setChanged();
 	this.notifyObservers();
     }
 
     public E remove() {
-	return box.dequeue();
+	try {
+	    return box.remove();
+	} catch (Exception e) {
+	    return null;
+	}
     }
 }

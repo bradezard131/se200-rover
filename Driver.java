@@ -16,6 +16,7 @@ public abstract class Driver {
 	
 	public Move(Driver d, double dist) {
 	    this.dist = dist;
+	    this.d = d;
 	}
 	
 	@Override
@@ -27,6 +28,8 @@ public abstract class Driver {
 
 	    if(dist < 0)
 		dist *= -1; //Make dist positive for loop
+	    if(dist > 100)
+		dist /= 50;
 
 	    for(double d = 0; d < dist; d += 0.5) 
 		try { Thread.sleep(100); } catch(InterruptedException ie) {}
